@@ -16,7 +16,7 @@
     "Argparse",
     "No command-line interface"
   ],
-  "create_author_file": "y",
+
   "open_source_license": [
     "MIT license",
     "BSD license",
