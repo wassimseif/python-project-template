@@ -22,3 +22,7 @@ indent_style = tab
 
 [*.{diff,patch}]
 trim_trailing_whitespace = false
+# 4 space indentation
+[*.py]
+indent_style = space
+indent_size = 2

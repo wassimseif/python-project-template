@@ -1,66 +1,71 @@
 import logging
 from pathlib import Path
-from typing import Any, Dict, Union
-
-import pkg_resources
-import yaml
-from {{ cookiecutter.project_slug }}.Project import Project
-logger = logging.getLogger('{{ cookiecutter.project_slug }}')
+from typing import  Dict, Union
+from box import Box
+from {{ cookiecutter.project_slug }}.project import Project
 
 
-def get_resource_string(path: str, decode=True) -> Union[str, bytes]:
-    """
-    Load a package resource (i.e. a file from within this package)
-
-    :param path: the path, starting at the root of the current module (e.g. 'res/default.conf').
-           must be a string, not a Path object!
-    :param decode: if true, decode the file contents as string (otherwise return bytes)
-    :return: the contents of the resource file (as string or bytes)
-    """
-    s = pkg_resources.resource_string(__name__.split('.')[0], path)
-    return s.decode(errors='ignore') if decode else s
 
 
-def load_config(config_file: Union[str, Path]) -> Dict[str, Any]:
+def load_config(config_file: Union[str, Path]) -> Box:
     """
     Load the config from the specified yaml file
 
     :param config_file: path of the config file to load
     :return: the parsed config as dictionary
     """
-    with open(config_file, 'r') as fp:
-        return yaml.safe_load(fp)
+    return Box.from_yaml(filename=config_file)
 
+
+
+def load_default_config() -> Box:
+    """
+    Load the default config from the package
+
+    :return: the parsed default config as a `Box`
+    """
+    return Box.from_yaml(filename=Project.main_config_file)
 
 def logging_setup(config: Dict, logger: logging.Logger):
     """
     setup logging based on the configuration
 
     :param config: the parsed config tree
+    :param logger: the logger to set up
     """
     log_conf = config["logging"]
     fmt = log_conf["format"]
-    if log_conf["enabled"]:
-        level = logging._nameToLevel[log_conf["level"].upper()]
-    else:
-        level = logging.NOTSET
-    logging.basicConfig(format=fmt, level=logging.WARNING)
-    logger.setLevel(level)
+    if not log_conf["enabled"]:
+        logger.handlers = []
+        logger.setLevel(logging.NOTSET)
+        return logger
+    new_level = log_conf["level"].upper()
+    logger.setLevel(new_level)
+
+
+    console_handler = logging.StreamHandler()
+    console_handler.setLevel(new_level)
+    console_handler.setFormatter(logging.Formatter(fmt))
+    logger.addHandler(console_handler)
+    if not log_conf["enabled"]:
+        filehdlr = logging.FileHandler(Project.log_dir / f"{logger.name}.log")
+        console_handler.setFormatter(logging.Formatter(fmt))
+        logger.addHandler(filehdlr)
+    return logger
+
+
 
 
 def get_logger(
     name: str = "{{ cookiecutter.project_slug }}", log_to_file: bool = False
 ) -> logging.Logger:
     logger = logging.getLogger(name)
-    if len(logger.handlers) == 1:
+    if logger.handlers == 2 and log_to_file:
         return logger
+
+    if len(logger.handlers) == 1 and not log_to_file:
+        return logger
+
     config = load_config(Project.main_config_file)
     logging_setup(config, logger)
-    if log_to_file:
-        # create file handler
-        formatter = logging.Formatter(config["logging"]["format"])
-        filehdlr = logging.FileHandler(Project.log_dir / f"{name}.log")
-        filehdlr.setFormatter(formatter)
-        logger.addHandler(filehdlr)
-
     return logger
