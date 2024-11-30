@@ -8,7 +8,7 @@ with open('README.md') as readme_file:
     readme = readme_file.read()
 
 
-requirements = [{%- if cookiecutter.command_line_interface|lower == 'click' %}'Click>=7.0',{%- endif %} ]
+requirements = []
 
 test_requirements = 'pytest>=3'
 
@@ -34,13 +34,11 @@ setup(
         'Programming Language :: Python :: 3.8',
     ],
     description="{{ cookiecutter.project_short_description }}",
-    {%- if 'no' not in cookiecutter.command_line_interface|lower %}
     entry_points={
         'console_scripts': [
-            '{{ cookiecutter.project_slug }}={{ cookiecutter.project_slug }}.cli:main',
+            '{{ cookiecutter.project_slug }}={{ cookiecutter.project_slug }}.__main__:main',
         ],
     },
-    {%- endif %}
     install_requires=requirements,
     long_description=readme ,
     include_package_data=True,
