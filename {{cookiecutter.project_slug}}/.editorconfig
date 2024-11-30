@@ -1,6 +1,9 @@
 # http://editorconfig.org
 
 root = true
+[*.py]
+indent_style = space
+indent_size = 4
 
 [*]
 indent_style = space

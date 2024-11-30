@@ -1,0 +1,82 @@
+[project]
+name = {{cookiecutter.project_name}}
+version = {{cookiecutter.version}}
+description = {{cookiecutter.project_short_description}}
+authors = [
+    { name = {{cookiecutter.full_name}}, email = {{cookiecutter.email}}}
+]
+readme = "README.md"
+requires-python = ">= 3.11"
+license = { file = "LICENSE" }
+keywords = ['artificial intelligence', 'deep learning']
+
+classifiers = [
+    'Development Status :: 4 - Beta',
+    'Intended Audience :: Developers',
+    'Topic :: Scientific/Engineering :: Artificial Intelligence',
+    'License :: OSI Approved :: MIT License',
+    'Programming Language :: Python :: 3.8',
+]
+
+dependencies = []
+
+[project.urls]
+Homepage = ""
+Repository = ""
+
+[project.optional-dependencies]
+examples = []
+test = ["pytest"]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.pytest.ini_options]
+pythonpath = ["."]
+
+
+
+
+[tool.hatch.metadata]
+allow-direct-references = true
+
+[tool.hatch.build.targets.wheel]
+packages = ["{{cookiecutter.project_slug}}"]
+
+
+[tool.ruff]
+# Specify the directories or files to include
+src = ["src"]
+
+# Enable autofixable rules
+fix = false
+
+# Add rules for flake8 plugins (e.g., E, F for error and formatting rules)
+select = [
+    "E",  # pycodestyle errors
+    "F",  # pyflakes
+    "W",  # pycodestyle warnings
+    "C",  # complexity
+    "A",  # anti-patterns
+]
+
+# Ignore specific rules
+ignore = [
+    "E501",  # Line too long
+    "E203",  # Whitespace before ':'
+]
+
+# Exclude specific files or directories
+exclude = [
+    "__pycache__/",
+    "*.pyc",
+    "*.pyo",
+    ".git/",
+    ".venv/",
+    ".mypy_cache/",
+    ".pytest_cache/",
+]
+
+# Maximum line length (PEP 8 recommendation is 79 or 100)
+line-length = 88

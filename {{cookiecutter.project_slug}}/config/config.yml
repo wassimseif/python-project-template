@@ -1,6 +1,0 @@
-# log configuration for {{cookiecutter.project_slug}}
-logging:
-  enabled: true
-  log_to_file: true
-  format: "%(asctime)s.%(msecs)03d [%(levelname)s]: %(message)s"
-  level: "INFO"

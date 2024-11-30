@@ -12,8 +12,7 @@ class Project:
     module_dir: Path = Path(__file__).parent
     project_dir: Path = Path(__file__).parents[1]
 
-    config_dir = project_dir / "config"
-    main_config_file = config_dir / "config.yml"
+    configs_dir = project_dir / "config"
 
     data_dir = project_dir / "data"
     log_dir = project_dir / "log"
@@ -24,7 +23,7 @@ class Project:
         # create the directories if they don't exist
         self.data_dir.mkdir(exist_ok=True)
         self.log_dir.mkdir(exist_ok=True)
-        self.config_dir.mkdir(exist_ok=True)
+        self.configs_dir.mkdir(exist_ok=True)
         self.export_dir.mkdir(exist_ok=True)
 
 
