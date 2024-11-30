@@ -12,7 +12,7 @@ class Project:
     module_dir: Path = Path(__file__).parent
     project_dir: Path = Path(__file__).parents[1]
 
-    configs_dir = project_dir / "config"
+    configs_dir = project_dir / "configs"
 
     data_dir = project_dir / "data"
     log_dir = project_dir / "log"

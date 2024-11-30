@@ -12,3 +12,4 @@ venv*
 Dockerfile
 htmlcov
 node_modules/
+data/

@@ -15,6 +15,7 @@ clean-pyc: ## remove Python file artifacts
 	find . -name '*.pyo' -exec rm -f {} +
 	find . -name '*~' -exec rm -f {} +
 	find . -name '__pycache__' -exec rm -fr {} +
+	find . -name '.ruff_cache' -exec rm -fr {} +
 
 
 clean-test: ## remove test and coverage artifacts
@@ -30,19 +31,14 @@ format:
 	ruff format --check
 
 test: ## run tests quickly with the default Python
-	pytest
+	pytest tests/
 
 
 test-all: ## run tests on every Python version with tox
 	tox
 
-coverage: ## check code coverage quickly with the default Python
-	coverage run --source {{ cookiecutter.project_slug }} -m pytest
-	coverage report -m
-	coverage html
-	$(BROWSER) htmlcov/index.html
 
-docs: ## generate Sphinx HTML documentation, including API docs
-	rm -rf site
-	mkdocs serve
+main:
+	PYTHONPATH=$(CWD) python {{ cookiecutter.project_slug }}/main.py
+
 
